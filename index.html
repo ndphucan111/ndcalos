@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calorie Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Open Sans", sans-serif;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 160vh;
+      width: 100%;
+      padding: 50 10px;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 130%;
+      background: url("background.jpg"), #000;
+      background-position: center;
+      background-size: cover;
+      z-index: -1;
+    }
+
+    .wrapper {
+      width: 450px;
+      border-radius: 15px;
+      padding: 40px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+      transition: all 0.3s ease;
+    }
+
+    .wrapper:hover {
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 25px;
+      color: #ffffff;
+      letter-spacing: 1px;
+    }
+
+    .lang-buttons {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .lang-buttons img {
+      width: 32px;
+      height: 22px;
+      cursor: pointer;
+      margin-left: 10px;
+      border-radius: 3px;
+    }
+
+    label {
+      color: #fff;
+      display: block;
+      text-align: left;
+      margin: 10px 0 5px;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      outline: none;
+    }
+
+    option {
+      color: #000;
+    }
+
+    button {
+      margin-top: 20px;
+      background-color: #271930;
+      color: #ffffff;
+      font-weight: 600;
+      border: none;
+      padding: 15px 20px;
+      cursor: pointer;
+      border-radius: 25px;
+      font-size: 16px;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      color: #000;
+      background: rgba(255, 255, 255, 0.2);
+      border-color: #ffffff;
+    }
+
+    #result {
+      margin-top: 20px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="lang-buttons">
+      <img src="https://flagcdn.com/w40/vn.png" alt="Tiếng Việt" onclick="switchLanguage('vi')" title="Tiếng Việt">
+      <img src="https://flagcdn.com/w40/gb.png" alt="English" onclick="switchLanguage('en')" title="English">
+    </div>
+
+    <h2 id="title">Tính Lượng Calo Cần Nạp Mỗi Ngày</h2>
+
+    <label id="label-gender" for="gender">Giới tính:</label>
+    <select id="gender">
+      <option value="male">Nam / Male</option>
+      <option value="female">Nữ / Female</option>
+    </select>
+
+    <label id="label-age" for="age">Tuổi:</label>
+    <input type="number" id="age" placeholder="VD: 25 / e.g. 25" />
+
+    <label id="label-weight" for="weight">Cân nặng (kg):</label>
+    <input type="number" id="weight" placeholder="VD: 70 / e.g. 70" />
+
+    <label id="label-height" for="height">Chiều cao (cm):</label>
+    <input type="number" id="height" placeholder="VD: 170 / e.g. 170" />
+
+    <label id="label-activity" for="activity">Mức độ hoạt động:</label>
+    <select id="activity">
+      <option value="1.2">Ít vận động / Sedentary</option>
+      <option value="1.375">Vận động nhẹ / Light exercise</option>
+      <option value="1.55">Vận động vừa / Moderate exercise</option>
+      <option value="1.725">Vận động nhiều / Active</option>
+      <option value="1.9">Rất vận động / Very active</option>
+    </select>
+
+    <button onclick="calculateCalories()" id="btn-calculate">Tính Calo</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const lang = {
+      vi: {
+        title: "Tính Lượng Calo Cần Nạp Mỗi Ngày",
+        gender: "Giới tính:",
+        age: "Tuổi:",
+        weight: "Cân nặng (kg):",
+        height: "Chiều cao (cm):",
+        activity: "Mức độ hoạt động:",
+        calculate: "Tính Calo",
+        error: "Vui lòng nhập đầy đủ thông tin hợp lệ.",
+        result: "Lượng calo bạn cần mỗi ngày là khoảng"
+      },
+      en: {
+        title: "Daily Calorie Needs Calculator",
+        gender: "Gender:",
+        age: "Age:",
+        weight: "Weight (kg):",
+        height: "Height (cm):",
+        activity: "Activity Level:",
+        calculate: "Calculate Calories",
+        error: "Please enter all valid information.",
+        result: "Your estimated daily calorie need is about"
+      }
+    };
+
+    let currentLang = "vi";
+
+    function switchLanguage(selected) {
+      currentLang = selected;
+      document.getElementById("title").innerText = lang[selected].title;
+      document.getElementById("label-gender").innerText = lang[selected].gender;
+      document.getElementById("label-age").innerText = lang[selected].age;
+      document.getElementById("label-weight").innerText = lang[selected].weight;
+      document.getElementById("label-height").innerText = lang[selected].height;
+      document.getElementById("label-activity").innerText = lang[selected].activity;
+      document.getElementById("btn-calculate").innerText = lang[selected].calculate;
+    }
+
+    function calculateCalories() {
+      const gender = document.getElementById("gender").value;
+      const age = parseInt(document.getElementById("age").value);
+      const weight = parseFloat(document.getElementById("weight").value);
+      const height = parseFloat(document.getElementById("height").value);
+      const activity = parseFloat(document.getElementById("activity").value);
+
+      if (isNaN(age) || isNaN(weight) || isNaN(height)) {
+        document.getElementById("result").innerText = lang[currentLang].error;
+        return;
+      }
+
+      let bmr;
+      if (gender === "male") {
+        bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+      } else {
+        bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+      }
+
+      const tdee = bmr * activity;
+      document.getElementById("result").innerText = `${lang[currentLang].result} ${Math.round(tdee)} kcal.`;
+    }
+
+    switchLanguage("vi");
+  </script>
+</body>
+</html>
